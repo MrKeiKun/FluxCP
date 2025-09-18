@@ -314,8 +314,8 @@ class Flux_Template {
 		$this->headerPath = $this->themePath($this->headerName.'.php', true);
 		$this->footerPath = $this->themePath($this->footerName.'.php', true);
 		$this->url        = $this->url($this->moduleName, $this->actionName);
-		$this->urlWithQS  = $this->url;
-		
+		$this->urlWithQS  = str_replace('&', '&', $this->url); // decode to raw
+
 		if (!empty($_SERVER['QUERY_STRING'])) {
 			if ($this->useCleanUrls) {
 				$this->urlWithQS .= "?{$_SERVER['QUERY_STRING']}";
@@ -325,14 +325,16 @@ class Flux_Template {
 					list ($key,$val) = explode('=', $line, 2);
 					$key = urldecode($key);
 					$val = urldecode($val);
-					
+
 					if ($key != 'module' && $key != 'action') {
 						$this->urlWithQS .= sprintf('&%s=%s', urlencode($key), urlencode($val));
 					}
 				}
 			}
 		}
-		
+
+		$this->urlWithQS = str_replace('&', '&', $this->urlWithQS); // encode
+
 		// Compatibility.
 		$this->urlWithQs  = $this->urlWithQS;
 		
@@ -550,7 +552,7 @@ class Flux_Template {
 			$path = "{$this->basePath}/$path";
 		}
 
-		return preg_replace('&/{2,}&', '/', $path);	}
+		return preg_replace('/{2,}/', '/', $path);	}
 	
 	/**
 	 * Similar to the path() method, but uses the $themePath as the path from
@@ -665,7 +667,8 @@ class Flux_Template {
 				$url = sprintf('%s/?module=%s%s', $this->basePath, $moduleName, $queryString);
 			}
 		}
-		return $serverProtocol.preg_replace('&/{2,}&', '/', "$serverAddress/$url");
+		$finalUrl = $serverProtocol.preg_replace('/{2,}/', '/', "$serverAddress/$url");
+		return str_replace('&', '&amp;', $finalUrl);
 	}
 	
 	/**
@@ -880,7 +883,7 @@ class Flux_Template {
 			$url = $proto.$hostname.'/'.$this->basePath;
 		}
 		
-		$url = rtrim(preg_replace('&/{2,}&', '/', $url), '/');
+		$url = rtrim(preg_replace('/{2,}/', '/', $url), '/');
 		return $url;
 	}
 	
@@ -1364,7 +1367,7 @@ class Flux_Template {
 		else {
 			reset($files);
 			$imageFile = current($files);
-			return preg_replace('&/{2,}&', '/', "{$this->basePath}/$imageFile");
+			return preg_replace('/{2,}/', '/', "{$this->basePath}/$imageFile");
 		}
 	}
 	
@@ -1374,7 +1377,7 @@ class Flux_Template {
 	public function iconImage($itemID)
 	{
 		$path = sprintf(FLUX_DATA_DIR."/items/icons/".Flux::config('ItemIconNameFormat'), $itemID);
-		$link = preg_replace('&/{2,}&', '/', "{$this->basePath}/$path");
+		$link = preg_replace('/{2,}/', '/', "{$this->basePath}/$path");
 		return file_exists($path) ? $link : false;
 	}
 	
@@ -1384,7 +1387,7 @@ class Flux_Template {
 	public function itemImage($itemID)
 	{
 		$path = sprintf(FLUX_DATA_DIR."/items/images/".Flux::config('ItemImageNameFormat'), $itemID);
-		$link = preg_replace('&/{2,}&', '/', "{$this->basePath}/$path");
+		$link = preg_replace('/{2,}/', '/', "{$this->basePath}/$path");
 		return file_exists($path) ? $link : false;
 	}
 	
@@ -1394,7 +1397,7 @@ class Flux_Template {
 	public function monsterImage($monsterID)
 	{
 		$path = sprintf(FLUX_DATA_DIR."/monsters/".Flux::config('MonsterImageNameFormat'), $monsterID);
-		$link = preg_replace('&/{2,}&', '/', "{$this->basePath}/$path");
+		$link = preg_replace('/{2,}/', '/', "{$this->basePath}/$path");
 		return file_exists($path) ? $link : false;
 	}
 	
@@ -1404,7 +1407,7 @@ class Flux_Template {
 	public function jobImage($gender, $jobID)
 	{
 		$path = sprintf(FLUX_DATA_DIR."/jobs/images/%s/".Flux::config('JobImageNameFormat'), $gender, $jobID);
-		$link = preg_replace('&/{2,}&', '/', "{$this->basePath}/$path");
+		$link = preg_replace('/{2,}/', '/', "{$this->basePath}/$path");
 		return file_exists($path) ? $link : false;
 	}
 	

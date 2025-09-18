@@ -224,7 +224,7 @@ class Flux_Dispatcher {
 			}
 			
 			$session->setMessageData($message);
-			header('Location: '.preg_replace('&/{2,}&', '/', $loginURL));
+			header('Location: '.preg_replace('/{2,}/', '/', $loginURL));
 			exit;
 		}
 	}
