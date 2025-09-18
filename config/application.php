@@ -3,7 +3,7 @@
 // the default, and should be changed as needed.
 return array(
 	'ServerAddress'        => 'localhost',              // This value is the hostname:port under which Flux runs. (e.g., example.com or example.com:80)
-	'BaseURI'              => '',                       // The base URI is the base web root on which your application lies.
+	'BaseURI'              => '/FluxCP',                       // The base URI is the base web root on which your application lies.
 	'InstallerPassword'    => 'secretpassword',         // Installer/updater password.
 	'RequireOwnership'     => true,                     // Require the executing user to be owner of the FLUX_ROOT/data/ directory tree? (Better for security)
 	                                                    // WARNING: This will be mostly IGNORED on non-POSIX-compliant OSes (e.g. Windows).
@@ -77,12 +77,11 @@ return array(
 	'ShowRenderDetails'    => true,                     // Shows the "page rendered in X seconds" and "number of queries executed: X" in the default theme.
 	'UseCleanUrls'         => false,                    // Set to true if you're running Apache and it supports mod_rewrite and .htaccess files.
 	'DebugMode'            => false,                    // Set to false to minimize technical details from being output by Flux. WARNING: DO NOT USE THIS OPTION ON A PUBLICALLY-ACCESSIBLE CP.
-	'UseCaptcha'           => true,                     // Use CAPTCHA image for account registration to prevent automated account creations. (Requires GD2/FreeType2)
-	'UseLoginCaptcha'      => false,                    // Use CAPTCHA image for account logins. (Requires GD2/FreeType2)
-	'EnableReCaptcha'      => false,                    // Enables the use of reCAPTCHA instead of Flux's native GD2 library (http://www.google.com/recaptcha)
-	'ReCaptchaPublicKey'   => '...',                    // This is your reCAPTCHA public key [REQUIRED FOR RECAPTCHA] (sign up at http://www.google.com/recaptcha)
-	'ReCaptchaPrivateKey'  => '...',                    // This is your reCAPTCHA private key [REQUIRED FOR RECAPTCHA] (sign up at http://www.google.com/recaptcha)
-	'ReCaptchaTheme'       => 'light',                  // ReCaptcha theme to use ( light / dark )
+	'UseCaptcha'           => true,                     // Use reCAPTCHA v3 for account registration to prevent automated account creations.
+	'UseLoginCaptcha'      => false,                    // Use reCAPTCHA v3 for account logins.
+	'ReCaptchaPublicKey'   => '...',                    // This is your reCAPTCHA v3 public key [REQUIRED] (sign up at http://www.google.com/recaptcha)
+	'ReCaptchaPrivateKey'  => '...',                    // This is your reCAPTCHA v3 private key [REQUIRED] (sign up at http://www.google.com/recaptcha)
+	'ReCaptchaMinimumScore' => 0.5,                     // Minimum score required for reCAPTCHA v3 (0.0 to 1.0)
 	'DisplaySinglePages'   => true,                     // Whether or not to display paging for single page results.
 	'ForwardYears'         => 15,                       // (Visual) The number of years to display ahead of the current year in date inputs.
 	'BackwardYears'        => 30,                       // (Visual) The number of years to display behind the current year in date inputs.

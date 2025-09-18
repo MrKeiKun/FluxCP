@@ -7,7 +7,7 @@ class Flux_Captcha {
 	 * GD image resource.
 	 *
 	 * @access protected
-	 * @var resource
+	 * @var GdImage
 	 */
 	protected $gd;
 	
@@ -23,7 +23,7 @@ class Flux_Captcha {
 	 * Security code.
 	 *
 	 * @access public
-	 * @var code
+	 * @var string
 	 */
 	public $code;
 	
@@ -48,7 +48,7 @@ class Flux_Captcha {
 		);
 		
 		// Let GD know where our fonts are.
-		//putenv("GDFONTPATH={$this->options['fontPath']}"); // Possibly breaks on Windows?
+		putenv("GDFONTPATH={$this->options['fontPath']}");
 		
 		// Generate security code.
 		$this->generateCode();
