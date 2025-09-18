@@ -10,7 +10,7 @@
 		<title><?php echo Flux::config('SiteTitle'); if (isset($title)) echo ": $title" ?></title>
 		<link rel="stylesheet" href="<?php echo $this->themePath('css/flux.css') ?>" type="text/css" media="screen" title="" charset="utf-8" />
 		<link href="<?php echo $this->themePath('css/flux/unitip.css') ?>" rel="stylesheet" type="text/css" media="screen" title="" charset="utf-8" />
-		<?php if (Flux::config('EnableReCaptcha')): ?>
+		<?php if (Flux::config('UseCaptcha') || Flux::config('UseLoginCaptcha')): ?>
 		<link href="<?php echo $this->themePath('css/flux/recaptcha.css') ?>" rel="stylesheet" type="text/css" media="screen" title="" charset="utf-8" />
 		<?php endif ?>
 		<!--[if IE]>
@@ -89,16 +89,6 @@
 			var spinner = new Image();
 			spinner.src = '<?php echo $this->themePath('img/spinner.gif') ?>';
 			
-			function refreshSecurityCode(imgSelector){
-				$(imgSelector).attr('src', spinner.src);
-				
-				// Load image, spinner will be active until loading is complete.
-				var clean = <?php echo Flux::config('UseCleanUrls') ? 'true' : 'false' ?>;
-				var image = new Image();
-				image.src = "<?php echo $this->url('captcha') ?>"+(clean ? '?nocache=' : '&nocache=')+Math.random();
-				
-				$(imgSelector).attr('src', image.src);
-			}
 			function toggleSearchForm()
 			{
 				//$('.search-form').toggle();
@@ -106,10 +96,10 @@
 			}
 		</script>
 		
-		<?php if (Flux::config('EnableReCaptcha') && Flux::config('ReCaptchaTheme')): ?>
+		<?php if (Flux::config('UseCaptcha') || Flux::config('UseLoginCaptcha')): ?>
 		<script type="text/javascript">
 			 var RecaptchaOptions = {
-			    theme : '<?php echo Flux::config('ReCaptchaTheme') ?>'
+			    theme : 'light'
 			 };
 		</script>
 		<?php endif ?>

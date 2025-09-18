@@ -272,7 +272,7 @@ class Flux_SessionData {
 			if (strtolower($securityCode) != strtolower($this->securityCode)) {
 				throw new Flux_LoginError('Invalid security code', Flux_LoginError::INVALID_SECURITY_CODE);
 			}
-			elseif (Flux::config('EnableReCaptcha')) {
+			else {
 				require_once 'recaptcha/recaptchalib.php';
 				$response = $_POST["g-recaptcha-response"];
 				$reCaptcha = new ReCaptcha(Flux::config('ReCaptchaPrivateKey'));
@@ -283,7 +283,7 @@ class Flux_SessionData {
 					);
 				}
 
-				if (!$response || !$response->success) {
+				if (!$response || !$response->success || ($response->score !== null && $response->score < Flux::config('ReCaptchaMinimumScore'))) {
 					throw new Flux_LoginError('Invalid security code', Flux_LoginError::INVALID_SECURITY_CODE);
 				}
 			}

@@ -1,8 +1,7 @@
 <?php
 if (!defined('FLUX_ROOT')) exit;
 
-require_once 'Flux/Captcha.php';
-$captcha = new Flux_Captcha();
-$session->setSecurityCodeData($captcha->code);
-$captcha->display();
+// reCAPTCHA v3 doesn't require server-side image generation
+// This module is kept for compatibility but does nothing
+exit;
 ?>

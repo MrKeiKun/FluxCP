@@ -148,22 +148,17 @@ class Flux_LoginServer extends Flux_BaseServer {
 			throw new Flux_RegisterError('Invalid birthdate', Flux_RegisterError::INVALID_BIRTHDATE);
 		}
 		elseif (Flux::config('UseCaptcha')) {
-			if (Flux::config('EnableReCaptcha')) {
-				require_once 'recaptcha/recaptchalib.php';
-				$response = $_POST["g-recaptcha-response"];
-				$reCaptcha = new ReCaptcha(Flux::config('ReCaptchaPrivateKey'));
-				if($response) {
-					$response = $reCaptcha->verifyResponse(
-						$_SERVER["REMOTE_ADDR"],
-						$_POST["g-recaptcha-response"]
-					);
-				}
-
-				if (!$response || !$response->success) {
-					throw new Flux_RegisterError('Invalid security code', Flux_RegisterError::INVALID_SECURITY_CODE);
-				}
+			require_once 'recaptcha/recaptchalib.php';
+			$response = $_POST["g-recaptcha-response"];
+			$reCaptcha = new ReCaptcha(Flux::config('ReCaptchaPrivateKey'));
+			if($response) {
+				$response = $reCaptcha->verifyResponse(
+					$_SERVER["REMOTE_ADDR"],
+					$_POST["g-recaptcha-response"]
+				);
 			}
-			elseif (strtolower($securityCode) !== strtolower(Flux::$sessionData->securityCode)) {
+
+			if (!$response || !$response->success || ($response->score !== null && $response->score < Flux::config('ReCaptchaMinimumScore'))) {
 				throw new Flux_RegisterError('Invalid security code', Flux_RegisterError::INVALID_SECURITY_CODE);
 			}
 		}

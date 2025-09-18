@@ -37,6 +37,7 @@ class ReCaptchaResponse
 {
     public $success;
     public $errorCodes;
+    public $score;
 }
 
 class ReCaptcha
@@ -86,12 +87,24 @@ class ReCaptcha
      * @param string $path url path to recaptcha server.
      * @param array  $data array of parameters to be sent.
      *
-     * @return array response
+     * @return string response
      */
     private function _submitHTTPGet($path, $data)
     {
         $req = $this->_encodeQS($data);
-        $response = file_get_contents($path . $req);
+        $url = $path . $req;
+
+        if (function_exists('curl_init')) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $response = curl_exec($ch);
+            curl_close($ch);
+        } else {
+            $response = file_get_contents($url);
+        }
+
         return $response;
     }
 
@@ -110,11 +123,11 @@ class ReCaptcha
         if ($response == null || strlen($response) == 0) {
             $recaptchaResponse = new ReCaptchaResponse();
             $recaptchaResponse->success = false;
-            $recaptchaResponse->errorCodes = 'missing-input';
+            $recaptchaResponse->errorCodes = array('missing-input');
             return $recaptchaResponse;
         }
 
-        $getResponse = $this->_submitHttpGet(
+        $getResponse = $this->_submitHTTPGet(
             self::$_siteVerifyUrl,
             array (
                 'secret' => $this->_secret,
@@ -126,11 +139,13 @@ class ReCaptcha
         $answers = json_decode($getResponse, true);
         $recaptchaResponse = new ReCaptchaResponse();
 
-        if (trim($answers ['success']) == true) {
+        if ($answers['success'] === true) {
             $recaptchaResponse->success = true;
+            $recaptchaResponse->score = isset($answers['score']) ? $answers['score'] : null;
         } else {
             $recaptchaResponse->success = false;
-            $recaptchaResponse->errorCodes = $answers [error-codes];
+            $recaptchaResponse->errorCodes = isset($answers['error-codes']) ? $answers['error-codes'] : array();
+            $recaptchaResponse->score = isset($answers['score']) ? $answers['score'] : null;
         }
 
         return $recaptchaResponse;

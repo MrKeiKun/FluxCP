@@ -13,7 +13,7 @@
 		<link rel='stylesheet' id='webfonts-css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,400italic|Bree+Serif' type='text/css' media='all' />
 		<link rel='stylesheet' id='style-css' href='<?php echo $this->themePath('css/style.css') ?>' type='text/css' media='all' />
 		<link rel='stylesheet' id='fontello-css'  href='<?php echo $this->themePath('lib/fontello/css/fontello.css?ver=1.2.2') ?>' type='text/css' media='all' />
-		<?php if (Flux::config('EnableReCaptcha')): ?>
+		<?php if (Flux::config('UseCaptcha') || Flux::config('UseLoginCaptcha')): ?>
 		<link rel='stylesheet' id='recaptcha-css' href='<?php echo $this->themePath('css/flux/recaptcha.css') ?>' type='text/css' media='screen' />
 		<?php endif ?>
 		<!--[if lt IE 9]>
@@ -79,16 +79,6 @@
 			var spinner = new Image();
 			spinner.src = '<?php echo $this->themePath('img/spinner.gif') ?>';
 			
-			function refreshSecurityCode(imgSelector){
-				$(imgSelector).attr('src', spinner.src);
-				
-				// Load image, spinner will be active until loading is complete.
-				var clean = <?php echo Flux::config('UseCleanUrls') ? 'true' : 'false' ?>;
-				var image = new Image();
-				image.src = "<?php echo $this->url('captcha') ?>"+(clean ? '?nocache=' : '&nocache=')+Math.random();
-				
-				$(imgSelector).attr('src', image.src);
-			}
 			function toggleSearchForm()
 			{
 				//$('.search-form').toggle();
@@ -96,10 +86,10 @@
 			}
 		</script>
 		
-		<?php if (Flux::config('EnableReCaptcha') && Flux::config('ReCaptchaTheme')): ?>
+		<?php if (Flux::config('UseCaptcha') || Flux::config('UseLoginCaptcha')): ?>
 		<script type="text/javascript">
 			 var RecaptchaOptions = {
-			    theme : '<?php echo Flux::config('ReCaptchaTheme') ?>'
+			    theme : 'light'
 			 };
 		</script>
 		<?php endif ?>
