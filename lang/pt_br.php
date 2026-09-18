@@ -526,7 +526,16 @@ return array(
 	'ZenyLogTypeLabel'        => 'Tipo',
 	'ZenyLogAmountLabel'      => 'Valor',
 	'ZenyLogMapLabel'         => 'Mapa',
-	
+
+	'NpcLogTitle'             => 'List NPC Log',
+	'NpcLogHeading'           => 'NPC Log',
+	'NpcLogNotFound'          => 'No NPC logs found.',
+	'NpcLogDateLabel'         => 'Date/Time',
+	'NpcLogAccountLabel'      => 'Account',
+	'NpcLogCharacterLabel'    => 'Character',
+	'NpcLogMapLabel'          => 'Map',
+	'NpcLogMessageLabel'      => 'Message',
+
 	// Module: mail
 	// - mail/index
 	'MailerTitle'             => 'Formulário de Email',
